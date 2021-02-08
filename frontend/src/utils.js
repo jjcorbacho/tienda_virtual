@@ -1,21 +1,21 @@
 export const prices = [
   {
-    name: 'Any',
+    name: 'Todas',
     min: 0,
     max: 0,
   },
   {
-    name: `S/1 to S/10`,
+    name: `de S/1 a S/10`,
     min: 1,
     max: 10,
   },
   {
-    name: `S/10 to S/100`,
+    name: `de S/10 a S/100`,
     min: 10,
     max: 100,
   },
   {
-    name: `S/100 to S/1000`,
+    name: `de S/100 a S/1000`,
     min: 100,
     max: 1000,
   },
