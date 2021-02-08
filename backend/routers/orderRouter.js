@@ -33,7 +33,7 @@ orderRouter.post(
   isAuth,
   expressAsyncHandler(async (req, res) => {
     if (req.body.orderItems.length === 0) {
-      res.status(400).send({ message: 'Cart is empty' });
+      res.status(400).send({ message: 'Carrito vacío' });
     } else {
       const order = new Order({
         seller: req.body.orderItems[0].seller,
@@ -49,7 +49,7 @@ orderRouter.post(
       const createdOrder = await order.save();
       res
         .status(201)
-        .send({ message: 'New Order Created', order: createdOrder });
+        .send({ message: 'Nueva orden creada', order: createdOrder });
     }
   })
 );
@@ -62,7 +62,7 @@ orderRouter.get(
     if (order) {
       res.send(order);
     } else {
-      res.status(404).send({ message: 'Order Not Found' });
+      res.status(404).send({ message: 'Orden no encontrada' });
     }
   })
 );
@@ -82,9 +82,9 @@ orderRouter.put(
         email_address: req.body.email_address,
       };
       const updatedOrder = await order.save();
-      res.send({ message: 'Order Paid', order: updatedOrder });
+      res.send({ message: 'Orden pagada', order: updatedOrder });
     } else {
-      res.status(404).send({ message: 'Order Not Found' });
+      res.status(404).send({ message: 'Orden no encontrada' });
     }
   })
 );
@@ -97,9 +97,9 @@ orderRouter.delete(
     const order = await Order.findById(req.params.id);
     if (order) {
       const deleteOrder = await order.remove();
-      res.send({ message: 'Order Deleted', order: deleteOrder });
+      res.send({ message: 'Orden eliminada', order: deleteOrder });
     } else {
-      res.status(404).send({ message: 'Order Not Found' });
+      res.status(404).send({ message: 'Orden no encontrada' });
     }
   })
 );
@@ -115,9 +115,9 @@ orderRouter.put(
       order.deliveredAt = Date.now();
 
       const updatedOrder = await order.save();
-      res.send({ message: 'Order Delivered', order: updatedOrder });
+      res.send({ message: 'Orden enviada', order: updatedOrder });
     } else {
-      res.status(404).send({ message: 'Order Not Found' });
+      res.status(404).send({ message: 'Orden no encontrada' });
     }
   })
 );

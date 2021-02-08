@@ -43,7 +43,7 @@ userRouter.post(
         return;
       }
     }
-    res.status(401).send({ message: 'Invalid email or password' });
+    res.status(401).send({ message: 'Contraseña o correo inválido' });
   })
 );
 
@@ -74,7 +74,7 @@ userRouter.get(
     if (user) {
       res.send(user);
     } else {
-      res.status(404).send({ message: 'User Not Found' });
+      res.status(404).send({ message: 'Usuario no encontrado' });
     }
   })
 );
@@ -126,13 +126,13 @@ userRouter.delete(
     const user = await User.findById(req.params.id);
     if (user) {
       if (user.email === 'admin@example.com') {
-        res.status(400).send({ message: 'Can Not Delete Admin User' });
+        res.status(400).send({ message: 'No puedes eliminar este correo' });
         return;
       }
       const deleteUser = await user.remove();
-      res.send({ message: 'User Deleted', user: deleteUser });
+      res.send({ message: 'Eliminar Usuario', user: deleteUser });
     } else {
-      res.status(404).send({ message: 'User Not Found' });
+      res.status(404).send({ message: 'Usuario no encontrado' });
     }
   })
 );
@@ -150,9 +150,9 @@ userRouter.put(
       user.isAdmin = Boolean(req.body.isAdmin);
       // user.isAdmin = req.body.isAdmin || user.isAdmin;
       const updatedUser = await user.save();
-      res.send({ message: 'User Updated', user: updatedUser });
+      res.send({ message: 'Usuario actualizado', user: updatedUser });
     } else {
-      res.status(404).send({ message: 'User Not Found' });
+      res.status(404).send({ message: 'Usuario no encontrado' });
     }
   })
 );

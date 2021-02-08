@@ -83,7 +83,7 @@ productRouter.get(
     } else {
       res
         .status(500)
-        .send({ message: 'No seller found. first run /api/users/seed' });
+        .send({ message: 'Vendedor no encontrado. first run /api/users/seed' });
     }
   })
 );
@@ -98,7 +98,7 @@ productRouter.get(
     if (product) {
       res.send(product);
     } else {
-      res.status(404).send({ message: 'Product Not Found' });
+      res.status(404).send({ message: 'Producto no encontrado' });
     }
   })
 );
@@ -109,19 +109,19 @@ productRouter.post(
   isSellerOrAdmin,
   expressAsyncHandler(async (req, res) => {
     const product = new Product({
-      name: 'sample name ' + Date.now(),
+      name: 'Nomre ' + Date.now(),
       seller: req.user._id,
       image: '/images/p1.jpg',
       price: 0,
-      category: 'sample category',
-      brand: 'sample brand',
+      category: 'Categoria',
+      brand: 'Marca',
       countInStock: 0,
       rating: 0,
       numReviews: 0,
-      description: 'sample description',
+      description: 'Descripción',
     });
     const createdProduct = await product.save();
-    res.send({ message: 'Product Created', product: createdProduct });
+    res.send({ message: 'Producto creado', product: createdProduct });
   })
 );
 productRouter.put(
@@ -140,9 +140,9 @@ productRouter.put(
       product.countInStock = req.body.countInStock;
       product.description = req.body.description;
       const updatedProduct = await product.save();
-      res.send({ message: 'Product Updated', product: updatedProduct });
+      res.send({ message: 'Producto actualizado', product: updatedProduct });
     } else {
-      res.status(404).send({ message: 'Product Not Found' });
+      res.status(404).send({ message: 'Prodcuto no encontrado' });
     }
   })
 );
@@ -155,9 +155,9 @@ productRouter.delete(
     const product = await Product.findById(req.params.id);
     if (product) {
       const deleteProduct = await product.remove();
-      res.send({ message: 'Product Deleted', product: deleteProduct });
+      res.send({ message: 'Producto eliminado', product: deleteProduct });
     } else {
-      res.status(404).send({ message: 'Product Not Found' });
+      res.status(404).send({ message: 'Producto no encontrado' });
     }
   })
 );
@@ -172,7 +172,7 @@ productRouter.post(
       if (product.reviews.find((x) => x.name === req.user.name)) {
         return res
           .status(400)
-          .send({ message: 'You already submitted a review' });
+          .send({ message: 'Ya enviaste una reseña' });
       }
       const review = {
         name: req.user.name,
@@ -186,11 +186,11 @@ productRouter.post(
         product.reviews.length;
       const updatedProduct = await product.save();
       res.status(201).send({
-        message: 'Review Created',
+        message: 'Reseña creada',
         review: updatedProduct.reviews[updatedProduct.reviews.length - 1],
       });
     } else {
-      res.status(404).send({ message: 'Product Not Found' });
+      res.status(404).send({ message: 'Producto no encontrado' });
     }
   })
 );
