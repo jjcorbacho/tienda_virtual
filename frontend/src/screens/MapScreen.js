@@ -1,3 +1,4 @@
+// aca creamos la vista de google tal cual como nos dice el tutorial para la creación de geolocalización
 import React, { useEffect, useRef, useState } from 'react';
 import {
   LoadScript,

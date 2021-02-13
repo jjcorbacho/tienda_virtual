@@ -28,6 +28,7 @@ orderRouter.get(
   })
 );
 
+// aca creamos la orden
 orderRouter.post(
   '/',
   isAuth,
@@ -46,7 +47,7 @@ orderRouter.post(
         totalPrice: req.body.totalPrice,
         user: req.user._id,
       });
-      const createdOrder = await order.save();
+      const createdOrder = await order.save(); // la guardamos en la base de datos
       res
         .status(201)
         .send({ message: 'Nueva orden creada', order: createdOrder });
@@ -54,6 +55,7 @@ orderRouter.post(
   })
 );
 
+// para buscar las ordes según el usuario
 orderRouter.get(
   '/:id',
   isAuth,
@@ -67,6 +69,7 @@ orderRouter.get(
   })
 );
 
+// para actualizar la orden
 orderRouter.put(
   '/:id/pay',
   isAuth,
@@ -81,7 +84,7 @@ orderRouter.put(
         update_time: req.body.update_time,
         email_address: req.body.email_address,
       };
-      const updatedOrder = await order.save();
+      const updatedOrder = await order.save(); // se manda a la base de datos
       res.send({ message: 'Orden pagada', order: updatedOrder });
     } else {
       res.status(404).send({ message: 'Orden no encontrada' });
@@ -89,6 +92,7 @@ orderRouter.put(
   })
 );
 
+// para eliminar la orden 
 orderRouter.delete(
   '/:id',
   isAuth,
@@ -96,14 +100,16 @@ orderRouter.delete(
   expressAsyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (order) {
-      const deleteOrder = await order.remove();
-      res.send({ message: 'Orden eliminada', order: deleteOrder });
+      const deleteOrder = await order.remove(); // para quitarla de la base de datos
+      res.send({ message: 'Orden eliminada', order: deleteOrder }); // se envia el mensaje al front
     } else {
       res.status(404).send({ message: 'Orden no encontrada' });
     }
   })
 );
 
+
+// para actualizar la orden si ha sido enviada
 orderRouter.put(
   '/:id/deliver',
   isAuth,
@@ -114,8 +120,8 @@ orderRouter.put(
       order.isDelivered = true;
       order.deliveredAt = Date.now();
 
-      const updatedOrder = await order.save();
-      res.send({ message: 'Orden enviada', order: updatedOrder });
+      const updatedOrder = await order.save(); // se guarda en la base de datos
+      res.send({ message: 'Orden enviada', order: updatedOrder }); // se envia el mensaje al front
     } else {
       res.status(404).send({ message: 'Orden no encontrada' });
     }

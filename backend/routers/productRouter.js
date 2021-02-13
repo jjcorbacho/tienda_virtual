@@ -10,8 +10,8 @@ const productRouter = express.Router();
 productRouter.get(
   '/',
   expressAsyncHandler(async (req, res) => {
-    const pageSize = 3;
-    const page = Number(req.query.pageNumber) || 1;
+    const pageSize = 3; // aca podemos varias la cantidad de contenido mostrado en cada página
+    const page = Number(req.query.pageNumber) || 1; // aca le indicamos que siempre la página que se muestra será la 1
     const name = req.query.name || '';
     const category = req.query.category || '';
     const seller = req.query.seller || '';
@@ -25,10 +25,10 @@ productRouter.get(
         ? Number(req.query.rating)
         : 0;
 
-    const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {};
-    const sellerFilter = seller ? { seller } : {};
-    const categoryFilter = category ? { category } : {};
-    const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
+    const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {}; // para realizar la busqueda por nombre
+    const sellerFilter = seller ? { seller } : {}; // por vendedor
+    const categoryFilter = category ? { category } : {}; // por categoria
+    const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {}; // por precio
     const ratingFilter = rating ? { rating: { $gte: rating } } : {};
     const sortOrder =
       order === 'lowest'
@@ -52,14 +52,14 @@ productRouter.get(
       ...priceFilter,
       ...ratingFilter,
     })
-      .populate('seller', 'seller.name seller.logo')
+      .populate('seller', 'seller.name seller.logo') // traemos los parametors de los vendedores
       .sort(sortOrder)
       .skip(pageSize * (page - 1))
       .limit(pageSize);
     res.send({ products, page, pages: Math.ceil(count / pageSize) });
   })
 );
-
+// para traer los productos por categoria
 productRouter.get(
   '/categories',
   expressAsyncHandler(async (req, res) => {
@@ -67,11 +67,10 @@ productRouter.get(
     res.send(categories);
   })
 );
-
+// para traer los productos creados por el vendedor
 productRouter.get(
   '/seed',
   expressAsyncHandler(async (req, res) => {
-    // await Product.remove({});
     const seller = await User.findOne({ isSeller: true });
     if (seller) {
       const products = data.products.map((product) => ({
@@ -87,7 +86,7 @@ productRouter.get(
     }
   })
 );
-
+// para traer los productos por id 
 productRouter.get(
   '/:id',
   expressAsyncHandler(async (req, res) => {
@@ -102,7 +101,7 @@ productRouter.get(
     }
   })
 );
-
+//para crear un producto
 productRouter.post(
   '/',
   isAuth,
@@ -120,10 +119,12 @@ productRouter.post(
       numReviews: 0,
       description: 'Descripción',
     });
+    // aca se guarda el producto en la base de datos
     const createdProduct = await product.save();
     res.send({ message: 'Producto creado', product: createdProduct });
   })
 );
+// para actualizar un producto
 productRouter.put(
   '/:id',
   isAuth,
@@ -134,6 +135,7 @@ productRouter.put(
     if (product) {
       product.name = req.body.name;
       product.price = req.body.price;
+      //para actualizar la imagen del producto
       product.image = req.body.image;
       product.category = req.body.category;
       product.brand = req.body.brand;
@@ -147,6 +149,7 @@ productRouter.put(
   })
 );
 
+// para eliminar un producto
 productRouter.delete(
   '/:id',
   isAuth,
@@ -162,6 +165,7 @@ productRouter.delete(
   })
 );
 
+// para crear una reseña del producto
 productRouter.post(
   '/:id/reviews',
   isAuth,

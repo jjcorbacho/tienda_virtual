@@ -7,25 +7,27 @@ import { generateToken, isAdmin, isAuth } from '../utils.js';
 
 const userRouter = express.Router();
 
+// aca traemos a los vendedor top
 userRouter.get(
   '/top-sellers',
   expressAsyncHandler(async (req, res) => {
     const topSellers = await User.find({ isSeller: true })
       .sort({ 'seller.rating': -1 })
-      .limit(3);
-    res.send(topSellers);
+      .limit(3); // le ponemos un limite 
+    res.send(topSellers); // enviamos al front
   })
 );
 
+// para la sección administrador para ver los usuarios que han sido creados
 userRouter.get(
   '/seed',
   expressAsyncHandler(async (req, res) => {
-    // await User.remove({});
     const createdUsers = await User.insertMany(data.users);
-    res.send({ createdUsers });
+    res.send({ createdUsers }); //mandamos al front
   })
 );
 
+// para logearse
 userRouter.post(
   '/signin',
   expressAsyncHandler(async (req, res) => {
@@ -47,6 +49,7 @@ userRouter.post(
   })
 );
 
+// para registrarse
 userRouter.post(
   '/register',
   expressAsyncHandler(async (req, res) => {
@@ -55,7 +58,7 @@ userRouter.post(
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 8),
     });
-    const createdUser = await user.save();
+    const createdUser = await user.save(); //aca lo guardamos en la base de datos
     res.send({
       _id: createdUser._id,
       name: createdUser.name,
@@ -78,6 +81,8 @@ userRouter.get(
     }
   })
 );
+
+// aca actualizamos el perfil del usuario
 userRouter.put(
   '/profile',
   isAuth,
@@ -86,6 +91,7 @@ userRouter.put(
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
+      // si es vendedor actualizamos su perfil
       if (user.isSeller) {
         user.seller.name = req.body.sellerName || user.seller.name;
         user.seller.logo = req.body.sellerLogo || user.seller.logo;
@@ -95,7 +101,7 @@ userRouter.put(
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8);
       }
-      const updatedUser = await user.save();
+      const updatedUser = await user.save(); //guardamos en la base de datos
       res.send({
         _id: updatedUser._id,
         name: updatedUser.name,
@@ -108,6 +114,7 @@ userRouter.put(
   })
 );
 
+// si es administrador puede ver los usuarios
 userRouter.get(
   '/',
   isAuth,
@@ -118,6 +125,7 @@ userRouter.get(
   })
 );
 
+// para eliminar a un usuario
 userRouter.delete(
   '/:id',
   isAuth,
@@ -125,9 +133,9 @@ userRouter.delete(
   expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
     if (user) {
-      if (user.email === 'admin@example.com') {
+      if (user.email === 'admin@example.com') { 
         res.status(400).send({ message: 'No puedes eliminar este correo' });
-        return;
+        return; // protegemos al usuario administrador de no se borrado
       }
       const deleteUser = await user.remove();
       res.send({ message: 'Eliminar Usuario', user: deleteUser });
@@ -137,6 +145,7 @@ userRouter.delete(
   })
 );
 
+// actualizamos los usuarios
 userRouter.put(
   '/:id',
   isAuth,
@@ -146,14 +155,14 @@ userRouter.put(
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-      user.isSeller = Boolean(req.body.isSeller);
-      user.isAdmin = Boolean(req.body.isAdmin);
+      user.isSeller = Boolean(req.body.isSeller); // puede cambiar si es vendedor
+      user.isAdmin = Boolean(req.body.isAdmin); // puede cambiar si es administrador
       // user.isAdmin = req.body.isAdmin || user.isAdmin;
       const updatedUser = await user.save();
       res.send({ message: 'Usuario actualizado', user: updatedUser });
     } else {
       res.status(404).send({ message: 'Usuario no encontrado' });
-    }
+    }s
   })
 );
 

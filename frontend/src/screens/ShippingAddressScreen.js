@@ -25,6 +25,7 @@ export default function ShippingAddressScreen(props) {
   const dispatch = useDispatch();
   const submitHandler = (e) => {
     e.preventDefault();
+    // creamos las constantes para las direcciones generadas por google maps
     const newLat = addressMap ? addressMap.lat : lat;
     const newLng = addressMap ? addressMap.lng : lng;
     if (addressMap) {

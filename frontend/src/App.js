@@ -27,7 +27,7 @@ import SearchScreen from './screens/SearchScreen';
 import { listProductCategories } from './actions/productActions';
 import LoadingBox from './components/LoadingBox';
 import MessageBox from './components/MessageBox';
-import MapScreen from './screens/MapScreen';
+import MapScreen from './screens/MapScreen'; // importamos la vista de google 
 
 function App() {
   const cart = useSelector((state) => state.cart);

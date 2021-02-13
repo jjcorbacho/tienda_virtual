@@ -21,7 +21,7 @@ const orderSchema = new mongoose.Schema(
       city: { type: String, required: true },
       postalCode: { type: String, required: true },
       country: { type: String, required: true },
-      lat: Number,
+      lat: Number, // aca configuramos la altitud y latitud de la api de google
       lng: Number,
     },
     paymentMethod: { type: String, required: true },
